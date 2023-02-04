@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    ArrayList<Integer> epicSubtasks;
+    private ArrayList<Integer> epicSubtasks; //Модификатор достипа изменен на приватный
 
     public Epic(String title) {
         super(title);

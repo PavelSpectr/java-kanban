@@ -1,3 +1,4 @@
+// Мы можем пообщаться лично и познакомиться? Хотелось бы узнать Ваш путь программиста) @Titsubishi - мой телеграмм.
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +14,13 @@ public class Manager {
 
     // 2.1 Получение списка всех задач
     public List<Task> getTasks() {
-        return new ArrayList<>(this.tasks.values());
-    }
+        return new ArrayList<>(tasks.values()); //Убрал ключевое this
+    } //Сделал отступы между всеми методами
+
     public List<Subtask> getSubtasks() {
         return new ArrayList<>(this.subtasks.values());
     }
+
     public List<Epic> getEpics() {
         return new ArrayList<>(this.epics.values());
     }
@@ -26,6 +29,7 @@ public class Manager {
     public void deleteAllTasks() {
         tasks.clear();
     }
+
     public void deleteAllSubtasks() {
         subtasks.clear();
         for (Epic epic : epics.values()) {
@@ -33,6 +37,7 @@ public class Manager {
             updateStatusEpic(epic);
         }
     }
+
     public void deleteAllEpics() {
         epics.clear();
         subtasks.clear();
@@ -50,16 +55,17 @@ public class Manager {
     public Epic getEpicById(int id) {
         return epics.get(id);
     }
+
     // 2.4 Создание. Сам объект должен передаваться в качестве параметра
     public void addTask(Task task) {
         task.setId(++id);
-        task.setStatus("NEW");
+        //task.setStatus("NEW"); //Убрал повторяющиеся сеттеры в методах
         tasks.put(id, task);
     }
 
     public void addSubtask(Subtask subtask) {
         subtask.setId(++id);
-        subtask.setStatus("NEW");
+        //subtask.setStatus("NEW");
         subtasks.put(id, subtask);
         epics.get(subtask.getEpicId()).getEpicSubtasks().add(id);
         updateStatusEpic(epics.get(subtask.getEpicId()));
@@ -67,7 +73,7 @@ public class Manager {
 
     public void addEpic(Epic epic) {
         epic.setId(++id);
-        epic.setStatus("NEW");
+        //epic.setStatus("NEW");
         epics.put(id, epic);
     }
 
@@ -77,10 +83,17 @@ public class Manager {
             tasks.put(task.getId(), task);
         }
     }
+
     public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {
             subtasks.put(subtask.getId(), subtask);
             updateStatusEpic(epics.get(subtask.getEpicId()));
+        }
+    }
+
+    public void updateEpic(Epic epic) { //Добавил обновление эпика, да действительно - моё упущение)
+        if (epics.containsKey(epic.getId())) {
+            epics.put(epic.getId(), epic);
         }
     }
 
@@ -89,6 +102,7 @@ public class Manager {
         System.out.println("Задача с id# " + id +" удалена." + System.lineSeparator());
         tasks.remove(id);
     }
+
     public void deleteSubtaskById(int id) {
         System.out.println("Подзадача с id# " + id +" удалена." + System.lineSeparator());
         if (subtasks.containsKey(id)) {
@@ -98,6 +112,7 @@ public class Manager {
             subtasks.remove(id);
         }
     }
+
     public void deleteEpicById(int id) {
         System.out.println("Эпик с id# " + id +" удален." + System.lineSeparator());
         if (epics.containsKey(id)) {
@@ -120,7 +135,7 @@ public class Manager {
     //     если у эпика нет подзадач или все они имеют статус NEW, то статус должен быть NEW.
     //     если все подзадачи имеют статус DONE, то и эпик считается завершённым — со статусом DONE.
     //     во всех остальных случаях статус должен быть IN_PROGRESS.
-    private boolean checkStatus(String status, Epic epic) {
+    private boolean checkStatus(String status, Epic epic) { //Благодарю) По-моему это было очень логичным решением
         for (int subtaskId : epic.getEpicSubtasks()) {
             if (!Objects.equals(subtasks.get(subtaskId).getStatus(), status)) {
                 return false;

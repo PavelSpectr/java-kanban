@@ -5,7 +5,7 @@ public class Task {
     private String title;
     private String description;
     private int id;
-    private String status;
+    private String status = "NEW"; //Добавил инициализацию статуса, чтобы не повторять сеттер при создании объекта
     // NEW — задача только создана, но к её выполнению ещё не приступили.
     // IN_PROGRESS — над задачей ведётся работа.
     // DONE — задача выполнена.
@@ -13,9 +13,27 @@ public class Task {
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
+        //this.status = "NEW"; // Решил проинициализировать сразу в поле
     }
     public Task(String title) {
         this.title = title;
+        //this.status = "NEW";
+    }
+
+    public String getTitle() { //Добавил геттеры и сеттеры для полей title и description
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getId() {
