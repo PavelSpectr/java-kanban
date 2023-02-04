@@ -1,4 +1,3 @@
-// Мы можем пообщаться лично и познакомиться? Хотелось бы узнать Ваш путь программиста) @Titsubishi - мой телеграмм.
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
