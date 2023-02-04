@@ -1,3 +1,8 @@
+import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Subtask;
+import ru.yandex.practicum.tasks.Task;
+import ru.yandex.practikum.manager.Manager;
+
 public class Main {
 
     public static void main(String[] args) {
@@ -6,7 +11,7 @@ public class Main {
         Epic epic;
         Manager mngr = new Manager();
 
-        //Task task;
+        //ru.yandex.practicum.tasks.Task task;
         mngr.addTask(new Task("Смокинг", "Забрать из химчистки"));
         mngr.addTask(new Task("Стрижка", "Заехать к парикмахеру"));
 

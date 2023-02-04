@@ -1,3 +1,5 @@
+package ru.yandex.practicum.tasks;
+
 import java.util.Objects;
 
 public class Task {
@@ -67,7 +69,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "ru.yandex.practicum.tasks.Task{" +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
