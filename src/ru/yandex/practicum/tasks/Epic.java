@@ -33,9 +33,9 @@ public class Epic extends Task {
     }
 
     @Override
-    public String toString() {
-        return "ru.yandex.practicum.tasks.Epic{" +
+    public String toString() { //Сделал вывод более информативным
+        return "ru.yandex.practicum.tasks.Epic{"+ super.toString() +
                 "epicSubtasks=" + epicSubtasks +
                 '}';
-    }
+    } //Читал про StringBuffer - так было бы более информативно, возможно, в будущем переделаю
 }

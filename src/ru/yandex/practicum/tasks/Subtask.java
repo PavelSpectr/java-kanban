@@ -3,7 +3,8 @@ package ru.yandex.practicum.tasks;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private int epicId;
+    private int epicId; //Сделал отступ (в ИДЕЕ то он заметен из-за usage)
+
     public Subtask(String title, String description, int epicId) {
         super(title, description);
         this.epicId = epicId;
@@ -28,5 +29,12 @@ public class Subtask extends Task {
     @Override
     public int hashCode() {
         return Objects.hash(epicId);
+    }
+
+    @Override
+    public String toString() { //Переопределил метод вывода, сделал его информативным
+        return "Subtask{" + super.toString() +
+                "epicId=" + epicId +
+                '}';
     }
 }

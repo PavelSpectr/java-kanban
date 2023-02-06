@@ -15,11 +15,10 @@ public class Task {
     public Task(String title, String description) {
         this.title = title;
         this.description = description;
-        //this.status = "NEW"; // Решил проинициализировать сразу в поле
     }
+
     public Task(String title) {
         this.title = title;
-        //this.status = "NEW";
     }
 
     public String getTitle() { //Добавил геттеры и сеттеры для полей title и description

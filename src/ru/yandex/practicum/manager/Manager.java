@@ -1,4 +1,4 @@
-package ru.yandex.practikum.manager;
+package ru.yandex.practicum.manager;
 
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
@@ -23,12 +23,12 @@ public class Manager {
     } //Сделал отступы между всеми методами
 
     public List<Subtask> getSubtasks() {
-        return new ArrayList<>(this.subtasks.values());
-    }
+        return new ArrayList<>(subtasks.values());
+    } //Убрал this
 
     public List<Epic> getEpics() {
-        return new ArrayList<>(this.epics.values());
-    }
+        return new ArrayList<>(epics.values());
+    } //И тут убрал this
 
     // 2.2 Удаление всех задач
     public void deleteAllTasks() {
@@ -64,13 +64,11 @@ public class Manager {
     // 2.4 Создание. Сам объект должен передаваться в качестве параметра
     public void addTask(Task task) {
         task.setId(++id);
-        //task.setStatus("NEW"); //Убрал повторяющиеся сеттеры в методах
         tasks.put(id, task);
     }
 
     public void addSubtask(Subtask subtask) {
         subtask.setId(++id);
-        //subtask.setStatus("NEW");
         subtasks.put(id, subtask);
         epics.get(subtask.getEpicId()).getEpicSubtasks().add(id);
         updateStatusEpic(epics.get(subtask.getEpicId()));
@@ -78,7 +76,6 @@ public class Manager {
 
     public void addEpic(Epic epic) {
         epic.setId(++id);
-        //epic.setStatus("NEW");
         epics.put(id, epic);
     }
 
