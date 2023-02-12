@@ -1,15 +1,17 @@
+import ru.yandex.practicum.manager.*;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
-import ru.yandex.practicum.manager.Manager;
 
 public class Main {
 
     public static void main(String[] args) {
+        TaskManager mngr = Managers.getDefault();
+        HistoryManager taskHistory = Managers.getDefaultHistory();
+
         Task task;
         Subtask subtask;
         Epic epic;
-        Manager mngr = new Manager();
 
         mngr.addTask(new Task("Смокинг", "Забрать из химчистки"));
         mngr.addTask(new Task("Стрижка", "Заехать к парикмахеру"));
@@ -30,15 +32,15 @@ public class Main {
         System.out.println(mngr.getSubtaskById(5));
 
         task = mngr.getTaskById(1);
-        task.setStatus("DONE");
+        task.setStatus(Status.DONE);
         mngr.updateTask(task);
         System.out.println(mngr.getTasks());
 
         subtask = mngr.getSubtaskById(4);
-        subtask.setStatus("DONE");
+        subtask.setStatus(Status.DONE);
         mngr.updateSubtask(subtask);
         subtask = mngr.getSubtaskById(5);
-        subtask.setStatus("DONE");
+        subtask.setStatus(Status.DONE);
         mngr.updateSubtask(subtask);
 
         System.out.println(mngr.getEpicById(6));
@@ -46,10 +48,10 @@ public class Main {
         mngr.deleteEpicById(6);
 
         subtask = mngr.getSubtaskById(4);
-        subtask.setStatus("IN_PROGRESS");
+        subtask.setStatus(Status.IN_PROGRESS);
         mngr.updateSubtask(subtask);
         subtask = mngr.getSubtaskById(5);
-        subtask.setStatus("DONE");
+        subtask.setStatus(Status.DONE);
         mngr.updateSubtask(subtask);
 
         System.out.println(mngr.getEpics());
@@ -61,6 +63,9 @@ public class Main {
         System.out.println(mngr.getTasks());
         System.out.println(mngr.getSubtasks());
         System.out.println(mngr.getEpics());
-    
+
+
+
+        taskHistory.printHistory();
     }
 }

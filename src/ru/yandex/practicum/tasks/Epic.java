@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Integer> epicSubtasks; //Модификатор достипа изменен на приватный
+    private ArrayList<Integer> epicSubtasks;
 
     public Epic(String title) {
         super(title);
@@ -37,5 +37,5 @@ public class Epic extends Task {
         return "ru.yandex.practicum.tasks.Epic{"+ super.toString() +
                 "epicSubtasks=" + epicSubtasks +
                 '}';
-    } //Читал про StringBuffer - так было бы более информативно, возможно, в будущем переделаю
+    } //Читал про StringBuffer - так было бы более информативно, возможно,  в будущем переделаю
 }

@@ -1,5 +1,7 @@
 package ru.yandex.practicum.tasks;
 
+import ru.yandex.practicum.manager.Status;
+
 import java.util.Objects;
 
 public class Task {
@@ -7,7 +9,7 @@ public class Task {
     private String title;
     private String description;
     private int id;
-    private String status = "NEW"; //Добавил инициализацию статуса, чтобы не повторять сеттер при создании объекта
+    private Status status = Status.NEW; //Добавил инициализацию статуса, чтобы не повторять сеттер при создании объекта
     // NEW — задача только создана, но к её выполнению ещё не приступили.
     // IN_PROGRESS — над задачей ведётся работа.
     // DONE — задача выполнена.
@@ -45,11 +47,11 @@ public class Task {
         this.id = id;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

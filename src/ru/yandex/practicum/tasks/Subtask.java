@@ -3,7 +3,7 @@ package ru.yandex.practicum.tasks;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private int epicId; //Сделал отступ (в ИДЕЕ то он заметен из-за usage)
+    private int epicId;
 
     public Subtask(String title, String description, int epicId) {
         super(title, description);
