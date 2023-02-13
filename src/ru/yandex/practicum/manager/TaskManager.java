@@ -6,6 +6,8 @@ import ru.yandex.practicum.tasks.Task;
 
 import java.util.List;
 
+// Extract Interface - супер штука)))
+// Как и моя суперспособность разбираться в любых не знакомых программах)
 public interface TaskManager {
     // 2.1 Получение списка всех задач
     List<Task> getTasks();
@@ -51,4 +53,6 @@ public interface TaskManager {
     void deleteSubtaskById(int id);
 
     void deleteEpicById(int id);
+
+    List<Task> getHistory(); // Добавил метод для релизации в менеджере
 }

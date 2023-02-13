@@ -1,6 +1,7 @@
 package ru.yandex.practicum.manager;
 
 import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
@@ -178,5 +179,10 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             epic.setStatus(Status.IN_PROGRESS);
         }
+    }
+
+    @Override
+    public List<Task> getHistory() { // Реалзовал метод получения истории просмотров
+        return taskHistory.getHistory();
     }
 }

@@ -1,7 +1,5 @@
 package ru.yandex.practicum.tasks;
 
-import ru.yandex.practicum.manager.Status;
-
 import java.util.Objects;
 
 public class Task {

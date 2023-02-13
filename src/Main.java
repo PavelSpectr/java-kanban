@@ -1,5 +1,6 @@
 import ru.yandex.practicum.manager.*;
 import ru.yandex.practicum.tasks.Epic;
+import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
@@ -7,7 +8,6 @@ public class Main {
 
     public static void main(String[] args) {
         TaskManager mngr = Managers.getDefault();
-        HistoryManager taskHistory = Managers.getDefaultHistory();
 
         Task task;
         Subtask subtask;
@@ -64,8 +64,8 @@ public class Main {
         System.out.println(mngr.getSubtasks());
         System.out.println(mngr.getEpics());
 
-
-
-        taskHistory.printHistory();
+        for (Task history : mngr.getHistory()) { // Вывод истории просмотров
+            System.out.println(history);
+        }
     }
 }
