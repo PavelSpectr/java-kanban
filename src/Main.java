@@ -12,7 +12,7 @@ public class Main {
         Task task;
         Subtask subtask;
         Epic epic;
-
+/*
         mngr.addTask(new Task("Смокинг", "Забрать из химчистки"));
         mngr.addTask(new Task("Стрижка", "Заехать к парикмахеру"));
 
@@ -63,6 +63,33 @@ public class Main {
         System.out.println(mngr.getTasks());
         System.out.println(mngr.getSubtasks());
         System.out.println(mngr.getEpics());
+
+        for (Task history : mngr.getHistory()) { // Вывод истории просмотров
+            System.out.println(history);
+        }
+        */
+
+        mngr.addTask(new Task("Задача 1", "Описание 1"));
+        mngr.addTask(new Task("Задача 2", "Описание 2"));
+
+        mngr.addEpic(new Epic("Эпик 1"));
+        mngr.addSubtask(new Subtask("Подзадача №1 Эпика 3", "Описание Подзадачи №1 Эпика 1", 3));
+        mngr.addSubtask(new Subtask("Подзадача №2 Эпика 3", "Описание Подзадачи №2 Эпика 1", 3));
+        mngr.addSubtask(new Subtask("Подзадача №3 Эпика 3", "Описание Подзадачи №3 Эпика 1", 3));
+
+        mngr.addEpic(new Epic("Эпик 2"));
+
+        System.out.println(mngr.getTaskById(2));
+        System.out.println(mngr.getTaskById(1));
+        System.out.println(mngr.getEpicById(3));
+        System.out.println(mngr.getTaskById(2));
+        System.out.println(mngr.getSubtaskById(4));
+        System.out.println(mngr.getEpicById(3));
+        System.out.println(mngr.getSubtaskById(5));
+        System.out.println(mngr.getSubtaskById(6));
+        System.out.println(mngr.getEpicById(7));
+        System.out.println(mngr.getEpicById(3));
+        System.out.println("----------------------------------------------------------");
 
         for (Task history : mngr.getHistory()) { // Вывод истории просмотров
             System.out.println(history);
