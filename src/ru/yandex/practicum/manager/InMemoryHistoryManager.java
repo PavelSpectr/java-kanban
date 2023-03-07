@@ -20,6 +20,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         } else {
             tail.next = newNode;
         }
+        tail = newNode; //Добавил присвоение newNode для tail в конце метода.
     }
 
     private void removeNode(Node node) {
