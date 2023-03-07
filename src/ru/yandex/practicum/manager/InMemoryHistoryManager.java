@@ -5,24 +5,16 @@ import ru.yandex.practicum.tasks.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    //private final List<Task> taskHistory = new LinkedList<>(); //Удаляем не используемый список (пока так оставлю, чтобы наглядно было)
-    private final Map<Integer, Node> nodeMap = new HashMap<>(); //Благодарю, правда я ужасно запутался поначалу)
+    private final Map<Integer, Node> nodeMap = new HashMap<>();
 
     private Node head;
     private Node tail;
-    //private int size = 0; // Удаляем поле размера за ненадобностью
 
     public void linkLast(Task data) { //
-        int id = data.getId();
+        removeNode(nodeMap.get(data.getId())); // Теперь метод удаления ноды будет выполняться здесь
 
-        if (nodeMap.containsKey(id)) {
-            removeNode(nodeMap.get(id)); //Удалил закомментированный метод
-        }
-
-        //final Node oldNode = tail;
-        final Node newNode = new Node(tail, data, null); //Сделал) Сейчас смотрю на этот код и понимаю, что писал его войдя в "поток")
-        //tail = newNode; //Сейчас смотрю на этот код и понимаю, что писал его войдя в поток)
-        nodeMap.put(id, newNode);
+        final Node newNode = new Node(tail, data, null);
+        nodeMap.put(data.getId(), newNode);
         if (tail == null) {
             head = newNode;
         } else {
@@ -31,13 +23,17 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node node) {
+        if (nodeMap.containsKey(node.data.getId())) { // перенес удаление ноды
+            removeNode(nodeMap.get(node.data.getId()));
+        }
+
         Node prevNode = node.prev;
         Node nextNode = node.next;
 
         if (prevNode == null && nextNode == null) {
             head = null;
             tail = null;
-        } else if (prevNode == null) { //Была такая мысль, но почему-то решил, что и так должно нормально сработать)
+        } else if (prevNode == null) {
             head = nextNode;
             head.prev = null;
         } else if (nextNode == null) {
@@ -53,7 +49,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        linkLast(task);
+        if (task != null) { //Добавил проверку ан null
+            linkLast(task);
+        }
     }
 
     @Override
@@ -62,8 +60,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public List<Task> getHistory() { //Благодарю) Тут тоже можно через head сразу все было сделать
-        List<Task> taskHistory = new ArrayList<>(); //Но у меня каша с переменными случилась уже)
+    public List<Task> getHistory() {
+        List<Task> taskHistory = new ArrayList<>();
         Node tempNode = head;
         while (tempNode != null) {
             taskHistory.add(tempNode.data);
@@ -71,18 +69,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
         return taskHistory;
     }
-
-/*    @Override
-    public void removeFromHistory(int id) { //Удаляю метод удаления
-        if(nodeMap.containsKey(id)) {
-            removeNode(nodeMap.get(id));
-        }
-    }*/
 }
 
-class Node { //Сделал форматирование - спасибо за подсказку) Класс стандартный)
-    public Task data; //Правда я сначала сделал с дженериками, но из-за этого у меня что-то не работало
-    public Node next; //В обсуждениях увидел, что лучше без дженериков делать
+class Node {
+    public Task data;
+    public Node next;
     public Node prev;
 
     public Node(Node prev, Task data, Node next) {
