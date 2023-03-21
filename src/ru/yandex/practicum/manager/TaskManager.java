@@ -4,6 +4,7 @@ import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface TaskManager {
@@ -29,12 +30,12 @@ public interface TaskManager {
     Epic getEpicById(int id);
 
     // 2.3.1 Получение истории просмотра всех задач, полученных по id
-    //List<Objects> getHistory();
+    List<Task> getHistory(); // Добавил метод для релизации в менеджере
 
     // 2.4 Создание. Сам объект должен передаваться в качестве параметра
     void addTask(Task task);
 
-    void addSubtask(Subtask subtask);
+    void addSubtask(Subtask subtask) throws IOException;
 
     void addEpic(Epic epic);
 
@@ -51,6 +52,4 @@ public interface TaskManager {
     void deleteSubtaskById(int id);
 
     void deleteEpicById(int id);
-
-    List<Task> getHistory(); // Добавил метод для релизации в менеджере
 }

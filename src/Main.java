@@ -4,9 +4,11 @@ import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         TaskManager mngr = Managers.getDefault();
 
         Task task;
@@ -69,7 +71,7 @@ public class Main {
         }
         */
 
-        mngr.addTask(new Task("Задача 1", "Описание 1"));
+/*        mngr.addTask(new Task("Задача 1", "Описание 1"));
         mngr.addTask(new Task("Задача 2", "Описание 2"));
 
         mngr.addEpic(new Epic("Эпик 1"));
@@ -93,6 +95,6 @@ public class Main {
 
         for (Task history : mngr.getHistory()) { // Вывод истории просмотров
             System.out.println(history);
-        }
+        }*/
     }
 }

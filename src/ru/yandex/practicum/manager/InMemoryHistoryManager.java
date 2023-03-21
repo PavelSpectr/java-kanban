@@ -24,8 +24,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node node) {
-        if (nodeMap.containsKey(node.data.getId())) { // перенес удаление ноды
-            removeNode(nodeMap.get(node.data.getId()));
+        if (node == null) {
+            return;
         }
 
         Node prevNode = node.prev;
