@@ -1,5 +1,6 @@
 package ru.yandex.practicum.manager;
 
+import ru.yandex.practicum.exceptions.ManagerSaveException;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
@@ -16,40 +17,40 @@ public interface TaskManager {
     List<Epic> getEpics();
 
     // 2.2 Удаление всех задач
-    void deleteAllTasks();
+    void deleteAllTasks() throws ManagerSaveException;
 
-    void deleteAllSubtasks();
+    void deleteAllSubtasks() throws ManagerSaveException;
 
-    void deleteAllEpics();
+    void deleteAllEpics() throws ManagerSaveException;
 
     // 2.3 Получение по идентификатору
-    Task getTaskById(int id);
+    Task getTaskById(int id) throws ManagerSaveException;
 
-    Subtask getSubtaskById(int id);
+    Subtask getSubtaskById(int id) throws ManagerSaveException;
 
-    Epic getEpicById(int id);
+    Epic getEpicById(int id) throws ManagerSaveException;
 
     // 2.3.1 Получение истории просмотра всех задач, полученных по id
     List<Task> getHistory(); // Добавил метод для релизации в менеджере
 
     // 2.4 Создание. Сам объект должен передаваться в качестве параметра
-    void addTask(Task task);
+    void addTask(Task task) throws ManagerSaveException;
 
     void addSubtask(Subtask subtask) throws IOException;
 
-    void addEpic(Epic epic);
+    void addEpic(Epic epic) throws ManagerSaveException;
 
     // 2.5 Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра
-    void updateTask(Task task);
+    void updateTask(Task task) throws ManagerSaveException;
 
-    void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask) throws ManagerSaveException;
 
-    void updateEpic(Epic epic);
+    void updateEpic(Epic epic) throws ManagerSaveException;
 
     // 2.6 Удаление по идентификатору
-    void deleteTaskById(int id);
+    void deleteTaskById(int id) throws ManagerSaveException;
 
-    void deleteSubtaskById(int id);
+    void deleteSubtaskById(int id) throws ManagerSaveException;
 
-    void deleteEpicById(int id);
+    void deleteEpicById(int id) throws ManagerSaveException;
 }

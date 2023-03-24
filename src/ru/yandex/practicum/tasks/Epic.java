@@ -11,6 +11,11 @@ public class Epic extends Task {
         epicSubtasks = new ArrayList<>();
     }
 
+    public Epic(String title, int id, Status status) {
+        super(title, id, status);
+        epicSubtasks = new ArrayList<>();
+    }
+
     public ArrayList<Integer> getEpicSubtasks() {
         return epicSubtasks;
     }
@@ -34,8 +39,8 @@ public class Epic extends Task {
 
     @Override
     public String toString() { //Сделал вывод более информативным
-        return "ru.yandex.practicum.tasks.Epic{"+ super.toString() +
+        return "Epic{"+ super.toString() +
                 "epicSubtasks=" + epicSubtasks +
                 '}';
-    } //Читал про StringBuffer - так было бы более информативно, возможно,  в будущем переделаю
+    } //Читал про StringBuffer - так было бы более информативно, возможно, в будущем переделаю
 }

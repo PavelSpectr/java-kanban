@@ -1,21 +1,22 @@
 package ru.yandex.practicum.manager;
 
+import ru.yandex.practicum.exceptions.ManagerSaveException;
 import ru.yandex.practicum.tasks.Epic;
 import ru.yandex.practicum.tasks.Status;
 import ru.yandex.practicum.tasks.Subtask;
 import ru.yandex.practicum.tasks.Task;
 
-import java.io.IOException;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
 
     // 1. Хранить задачи всех типов
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HistoryManager taskHistory = Managers.getDefaultHistory();
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HistoryManager taskHistory = Managers.getDefaultHistory();
+
 
     // 2.1 Получение списка всех задач
     @Override
@@ -35,7 +36,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // 2.2 Удаление всех задач
     @Override
-    public void deleteAllTasks() {
+    public void deleteAllTasks() throws ManagerSaveException {
         for (int id : tasks.keySet()) {
             taskHistory.remove(id);
         }
@@ -43,7 +44,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteAllSubtasks() {
+    public void deleteAllSubtasks() throws ManagerSaveException {
         for (int id : subtasks.keySet()) {
             taskHistory.remove(id);
         }
@@ -55,7 +56,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteAllEpics() {
+    public void deleteAllEpics() throws ManagerSaveException {
         for (int id : epics.keySet()) {
             taskHistory.remove(id);
         }
@@ -68,32 +69,32 @@ public class InMemoryTaskManager implements TaskManager {
 
     // 2.3 Получение по идентификатору
     @Override
-    public Task getTaskById(int id) {
+    public Task getTaskById(int id) throws ManagerSaveException {
         taskHistory.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
-    public Subtask getSubtaskById(int id) {
+    public Subtask getSubtaskById(int id) throws ManagerSaveException {
         taskHistory.add(subtasks.get(id));
         return subtasks.get(id);
     }
 
     @Override
-    public Epic getEpicById(int id) {
+    public Epic getEpicById(int id) throws ManagerSaveException {
         taskHistory.add(epics.get(id));
         return epics.get(id);
     }
 
     // 2.4 Создание. Сам объект должен передаваться в качестве параметра
     @Override
-    public void addTask(Task task) {
+    public void addTask(Task task) throws ManagerSaveException {
         task.setId(++id);
         tasks.put(id, task);
     }
 
     @Override
-    public void addSubtask(Subtask subtask) throws IOException {
+    public void addSubtask(Subtask subtask) throws ManagerSaveException {
         subtask.setId(++id);
         subtasks.put(id, subtask);
         epics.get(subtask.getEpicId()).getEpicSubtasks().add(id);
@@ -101,21 +102,21 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addEpic(Epic epic) {
+    public void addEpic(Epic epic) throws ManagerSaveException {
         epic.setId(++id);
         epics.put(id, epic);
     }
 
     // 2.5 Обновление. Новая версия объекта с верным идентификатором передаётся в виде параметра
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws ManagerSaveException {
         if (tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
         }
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
         if (subtasks.containsKey(subtask.getId())) {
             subtasks.put(subtask.getId(), subtask);
             updateStatusEpic(epics.get(subtask.getEpicId()));
@@ -123,7 +124,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) { //Добавил обновление эпика, да действительно - моё упущение)
+    public void updateEpic(Epic epic) throws ManagerSaveException { //Добавил обновление эпика, да действительно - моё упущение)
         if (epics.containsKey(epic.getId())) {
             epics.put(epic.getId(), epic);
         }
@@ -131,14 +132,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     // 2.6 Удаление по идентификатору
     @Override
-    public void deleteTaskById(int id) {
+    public void deleteTaskById(int id) throws ManagerSaveException {
         System.out.println("Задача с id# " + id +" удалена." + System.lineSeparator());
         tasks.remove(id);
         taskHistory.remove(id);
     }
 
     @Override
-    public void deleteSubtaskById(int id) {
+    public void deleteSubtaskById(int id) throws ManagerSaveException {
         System.out.println("Подзадача с id# " + id +" удалена." + System.lineSeparator());
         if (subtasks.containsKey(id)) {
             Epic epic = epics.get(subtasks.get(id).getEpicId());
@@ -150,7 +151,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteEpicById(int id) {
+    public void deleteEpicById(int id) throws ManagerSaveException {
         System.out.println("Эпик с id# " + id +" удален." + System.lineSeparator());
         if (epics.containsKey(id)) {
             Epic epic = epics.get(id);

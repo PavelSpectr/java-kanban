@@ -21,6 +21,20 @@ public class Task {
         this.title = title;
     }
 
+    public Task(String title, int id, Status status) {
+        this.title = title;
+        this.id = id;
+        this.status = status;
+    }
+
+    public Task(String title, String description, int id, Status status) {
+        this.title = title;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+    }
+
+
     public String getTitle() { //Добавил геттеры и сеттеры для полей title и description
         return title;
     }
@@ -68,8 +82,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "ru.yandex.practicum.tasks.Task{" +
-                ", title='" + title + '\'' +
+        return "Task{" +
+                "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status='" + status + '\'' +
