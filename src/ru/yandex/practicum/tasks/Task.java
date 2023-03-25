@@ -1,12 +1,15 @@
 package ru.yandex.practicum.tasks;
 
+import jdk.jshell.Snippet;
+import ru.yandex.practicum.manager.TaskType;
+
 import java.util.Objects;
 
 public class Task {
 
+    private int id;
     private String title;
     private String description;
-    private int id;
     private Status status = Status.NEW; //Добавил инициализацию статуса, чтобы не повторять сеттер при создании объекта
     // NEW — задача только создана, но к её выполнению ещё не приступили.
     // IN_PROGRESS — над задачей ведётся работа.
@@ -21,16 +24,16 @@ public class Task {
         this.title = title;
     }
 
-    public Task(String title, int id, Status status) {
-        this.title = title;
+    public Task(int id, String title, Status status) {
         this.id = id;
+        this.title = title;
         this.status = status;
     }
 
-    public Task(String title, String description, int id, Status status) {
+    public Task(int id, String title, String description, Status status) {
+        this.id = id;
         this.title = title;
         this.description = description;
-        this.id = id;
         this.status = status;
     }
 
@@ -82,11 +85,18 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        StringBuilder sb = new StringBuilder();
+        return sb.append(id).append(',')
+                .append(TaskType.TASK).append(',')
+                .append(title).append(',')
+                .append(description).append(',')
+                .append(status)
+                .toString();
+/*                "Task{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
                 ", status='" + status + '\'' +
-                '}';
+                '}';*/
     }
 }

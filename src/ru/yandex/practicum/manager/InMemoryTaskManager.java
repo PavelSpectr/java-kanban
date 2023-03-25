@@ -12,10 +12,10 @@ public class InMemoryTaskManager implements TaskManager {
     private int id = 0;
 
     // 1. Хранить задачи всех типов
-    protected final HashMap<Integer, Task> tasks = new HashMap<>();
-    protected final HashMap<Integer, Epic> epics = new HashMap<>();
-    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    protected final HistoryManager taskHistory = Managers.getDefaultHistory();
+    protected static final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected static final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected static final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected static final HistoryManager taskHistory = Managers.getDefaultHistory();
 
 
     // 2.1 Получение списка всех задач
@@ -68,7 +68,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // 2.3 Получение по идентификатору
-    @Override
     public Task getTaskById(int id) throws ManagerSaveException {
         taskHistory.add(tasks.get(id));
         return tasks.get(id);

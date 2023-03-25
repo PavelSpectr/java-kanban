@@ -9,25 +9,22 @@ import ru.yandex.practicum.tasks.Task;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал имплементацию
 /*
 Доброго времени!)
-По порядку:
-1) loadFromFile работает - но, мне не удалось привязать к epics список с id сабтасков, как я не старался.
-Сделал, конструктор файл, чтобы все работало через new File, хотя не совсем понимаю это требование,
-потому что метод createFileChecker, на мой взгляд, гораздо практичнее. Но я могу ошибаться, тем более,
-что есть указание в ТЗ, но не все что есть в ТЗ поддается логике.))
-2) Не совсем понимаю, как реализовать метод toString и таким образом сократить "достаточно много лишних строк кода".)
-Просто вынести все в отдельный метод? Ctrl+X -> Ctrl+V ))
-3) С исключениями разобрался.
-По проверке вроде все GOOD.
-
+Все поправил в соответствии с указаниями)
+Вот только со статиком не разобрался.
+В ТЗ нет такого чтобы метод save делать статичным.
+Но есть про loadFromFile. Но тогда приходится все делать статичным, вплоть до интерфейса.
+sudo apt update:
+Подсказали ребята, как сделать метод статичным - сделал)
+Низкий поклон, что теперь я понял, как это работает)
+Но чет не помню, чтоб нас учили такому. С мейном еще возились, но чтоб объект класса в самом классе создавать...
+Я бы скорее умом тронулся xD
+Ладно, побегу 7й спринт - там жесть. Отстаю на 2 недели.
+Хороших выходных)
 */
     private final File file;
 
@@ -35,8 +32,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
         this.file = file;
     }
 
-
-    public void createFileChecker() throws IOException {
+    // Пока просто закомментирую этот метод, что есть еще такой вариант,
+    // для наглядности и чтоб сам не забыл такую реализацию)
+   /*public void createFileChecker() throws IOException {
         Path pathToFile = Paths.get("src","ru", "yandex", "practicum", "resources", "tasks.csv");
         Path pathToDir = Paths.get("src", "ru", "yandex", "practicum", "resources");
         try {
@@ -45,38 +43,25 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
         } catch (FileAlreadyExistsException e) {
             System.out.println("Файл уже существует");
         }
-    }
+    }*/
 
-    public void save() throws ManagerSaveException {
+    public void save() throws ManagerSaveException { //
         try (Writer fileWriter = new FileWriter(file, StandardCharsets.UTF_8, false)) {
             StringBuilder sb = new StringBuilder("ID,Type,Title,Description,Status,EpicID\n");
 
             List<Task> tasks = getTasks(); // Теперь без super и вдвойне вкусней
             for (Task task : tasks) {
-                sb.append(task.getId()).append(',');
-                sb.append(TaskType.TASK).append(',');
-                sb.append(task.getTitle()).append(',');
-                sb.append(task.getDescription()).append(',');
-                sb.append(task.getStatus()).append("\n");
+                sb.append(task.toString()).append("\n");
             }
 
             List<Epic> epics = getEpics();
             for (Epic epic : epics) {
-                sb.append(epic.getId()).append(',');
-                sb.append(TaskType.EPIC).append(',');
-                sb.append(epic.getTitle()).append(',');
-                sb.append(epic.getStatus()).append(',');
-                sb.append(epic.getEpicSubtasks()).append("\n");
+                sb.append(epic.toString()).append("\n");
             }
 
             List<Subtask> subtasks = getSubtasks();
             for (Subtask subtask : subtasks) {
-                sb.append(subtask.getId()).append(',');
-                sb.append(TaskType.SUBTASK).append(',');
-                sb.append(subtask.getTitle()).append(',');
-                sb.append(subtask.getDescription()).append(',');
-                sb.append(subtask.getStatus()).append(',');
-                sb.append(subtask.getEpicId()).append("\n");
+                sb.append(subtask.toString()).append("\n");
             }
             sb.append("\n");
 
@@ -91,7 +76,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
         }
     }
 
-    public void loadFromFile() throws ManagerLoadException {
+    public static void loadFromFile(File file) throws ManagerLoadException {
+        FileBackedTasksManager fileBacked = new FileBackedTasksManager(file);
 
         try (Reader fileReader = new FileReader(file, StandardCharsets.UTF_8);
              BufferedReader br = new BufferedReader(fileReader)) {
@@ -102,34 +88,29 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
             while (!(readLine = br.readLine()).isBlank()) {
                 line = readLine.split(",");
                 id = Integer.parseInt(line[0]);
+                String type = line[1];
+                String title = line[2];
 
-                switch (TaskType.valueOf(line[1])) {
+                switch (TaskType.valueOf(type)) {
                     case TASK:
-                        tasks.put(id, new Task(line[2], line[3], id, Status.valueOf(line[4])));
+                        tasks.put(id, new Task(id, title, line[3], Status.valueOf(line[4])));
                         break;
                     case EPIC:
-                        //По идее, сюда нужно добавить еще ArrayList, но не вышло, как я не морочился.
-                        //В ТЗ этого нет, но по логике он должен быть, если мы делаем все в точности, как было.)
-                        epics.put(id, new Epic(line[2], id, Status.valueOf(line[3])));
+                        epics.put(id, new Epic(id, title, Status.valueOf(line[3])));
                         break;
                     case SUBTASK:
-                        subtasks.put(id, new Subtask(line[2], line[3], id, Status.valueOf(line[4]), Integer.parseInt(line[5])));
+                        int idOfEpic = Integer.parseInt(line[5]);
+                        subtasks.put(id, new Subtask(id, title, line[3], Status.valueOf(line[4]), idOfEpic));
+                        List<Epic> epics = fileBacked.getEpics();
+                        for (Epic epic : epics) {
+                            epic.getEpicSubtasks().add(id);
+                        }
                         break;
                     default:
                         break;
                 }
-
-                if(tasks.containsKey(id)) {
-                    System.out.println(tasks.get(id));
-                } else if (epics.containsKey(id)) {
-                    System.out.println(epics.get(id));
-                } else if (subtasks.containsKey(id)) {
-                    System.out.println(subtasks.get(id));
-                } else {
-                    System.out.println("Веселья приносит и чувств бодрящих - шквал BugReport'ов такой бесящий");
-                }
             }
-            System.out.println("------------------------------------------------");
+
             String[] history = null;
             while (br.ready()) {
                 readLine = br.readLine();
@@ -137,19 +118,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
             }
             if (history != null) {
                 for (String s : history) {
-                    int n = Integer.parseInt(s);
-                    if(tasks.containsKey(n)) {
-                        System.out.println(tasks.get(n));
-                    } else if (epics.containsKey(n)) {
-                        System.out.println(epics.get(n));
-                    } else if (subtasks.containsKey(n)) {
-                        System.out.println(subtasks.get(n));
-                    } else {
-                        System.out.println("Арабская но-о-о-очь, от кода восто-о-о-орг!... Но еще не совсем xD");
-                    }
-                    taskHistory.add(getTaskById(n));
-                    taskHistory.add(getEpicById(n));
-                    taskHistory.add(getSubtaskById(n));
+                    int number = Integer.parseInt(s);
+                    taskHistory.add(fileBacked.getTaskById(number));
+                    taskHistory.add(fileBacked.getEpicById(number));
+                    taskHistory.add(fileBacked.getSubtaskById(number));
                 }
             }
         } catch (IOException e) {
@@ -250,10 +222,11 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
         return newEpicById;
     }
 
-    public static void main (String[] args) throws IOException {
-        FileBackedTasksManager fileWriteMNGR = new FileBackedTasksManager(new File("src/ru/yandex/practicum/resources/tasks.csv"));
-        FileBackedTasksManager fileReadMNGR = new FileBackedTasksManager(new File("src/ru/yandex/practicum/resources/tasks.csv"));
-        //fileWriteMNGR.createFileChecker();
+    public static void main (String[] args) {
+        File file = new File("src/ru/yandex/practicum/resources/tasks.csv");
+
+        FileBackedTasksManager fileWriteMNGR = new FileBackedTasksManager(file);
+        FileBackedTasksManager fileReadMNGR = new FileBackedTasksManager(file);
 
         fileWriteMNGR.addTask(new Task("Задача 1", "Описание 1"));
         fileWriteMNGR.addTask(new Task("Задача 2", "Описание 2"));
@@ -277,7 +250,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
         fileWriteMNGR.getEpicById(3);
 
 
-        fileReadMNGR.loadFromFile();
+        fileReadMNGR.loadFromFile(file);
 
         System.out.println("************************************************");
         for (Task task : fileReadMNGR.getTasks()) {
@@ -295,24 +268,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager { // Убрал 
         }
     }
 }
-/*
-Спросил друга как дела, получил такой ответ:
-У меня все ок. Спасибо!
-Курсы.Learn(English)
-Дом.Learn(Java)
-
-Ну и иногда
-Улица.goForAWalk()
-Или
-Дом.Relax(Beer), Дом.Relax(TV)...
-
-Надо бы конечно
-Дом.Learn(English), но у меня часто выскакивает EnglishDisgustException, пока не смог победить...
-
-А в остальном
-Do
-System.out.println(Life.Day++)
-While Life.Day < Life.Day.MaxValue
-*/
 
 
