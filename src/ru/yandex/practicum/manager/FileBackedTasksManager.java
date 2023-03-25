@@ -76,7 +76,7 @@ sudo apt update:
         }
     }
 
-    public static void loadFromFile(File file) throws ManagerLoadException {
+    public static FileBackedTasksManager loadFromFile(File file) throws ManagerLoadException {
         FileBackedTasksManager fileBacked = new FileBackedTasksManager(file);
 
         try (Reader fileReader = new FileReader(file, StandardCharsets.UTF_8);
@@ -124,9 +124,11 @@ sudo apt update:
                     taskHistory.add(fileBacked.getSubtaskById(number));
                 }
             }
+
         } catch (IOException e) {
             throw new ManagerLoadException("Ошибка загрузки файла");
         }
+        return fileBacked;
     }
 
     @Override
@@ -226,7 +228,7 @@ sudo apt update:
         File file = new File("src/ru/yandex/practicum/resources/tasks.csv");
 
         FileBackedTasksManager fileWriteMNGR = new FileBackedTasksManager(file);
-        FileBackedTasksManager fileReadMNGR = new FileBackedTasksManager(file);
+        //FileBackedTasksManager fileReadMNGR = new FileBackedTasksManager(file);
 
         fileWriteMNGR.addTask(new Task("Задача 1", "Описание 1"));
         fileWriteMNGR.addTask(new Task("Задача 2", "Описание 2"));
@@ -250,8 +252,10 @@ sudo apt update:
         fileWriteMNGR.getEpicById(3);
 
 
-        fileReadMNGR.loadFromFile(file);
+        FileBackedTasksManager fileReadMNGR = FileBackedTasksManager.loadFromFile(file);
 
+        // А принты почему убрать надо? Пока оставлю, до ответа))
+        // Просто мне кажется, что я чего-то не знаю)
         System.out.println("************************************************");
         for (Task task : fileReadMNGR.getTasks()) {
             System.out.println(task);
