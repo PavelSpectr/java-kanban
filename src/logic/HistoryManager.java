@@ -1,10 +1,14 @@
-package ru.yandex.practicum.manager;
+package logic;
 
-import ru.yandex.practicum.tasks.Task;
+import tasks.Task;
+
 import java.util.List;
 
 public interface HistoryManager {
-    void add(Task task);
+    void addToHistory(Task task);
+
     void remove(int id);
+
     List<Task> getHistory();
+
 }

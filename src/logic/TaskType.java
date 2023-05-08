@@ -1,4 +1,4 @@
-package ru.yandex.practicum.manager;
+package logic;
 
 public enum TaskType {
     TASK,

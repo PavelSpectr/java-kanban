@@ -1,101 +1,74 @@
-import ru.yandex.practicum.manager.*;
-import ru.yandex.practicum.tasks.Epic;
-import ru.yandex.practicum.tasks.Status;
-import ru.yandex.practicum.tasks.Subtask;
-import ru.yandex.practicum.tasks.Task;
-
-import java.io.File;
-import java.io.IOException;
+import logic.Managers;
+import logic.TaskManager;
+import logic.TaskStatus;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 public class Main {
+    public static void main(String[] args) {
 
-    public static void main(String[] args) throws IOException {
-        TaskManager mngr = Managers.getDefault();
+        TaskManager manager = Managers.getDefault();
 
-        Task task;
-        Subtask subtask;
-        Epic epic;
-/*
-        mngr.addTask(new Task("Смокинг", "Забрать из химчистки"));
-        mngr.addTask(new Task("Стрижка", "Заехать к парикмахеру"));
+        Task task1 = new Task(10, "Задача №1", "Описание задачи 1");
+        manager.taskCreator(task1);
+        Task task2 = new Task(20, "Задача №2", "Описание задачи 2");
+        task2.setStatus(TaskStatus.IN_PROGRESS); // Тест изменения статуса
+        manager.taskCreator(task2);
 
-        mngr.addEpic(new Epic("Поезка на море"));
-        mngr.addSubtask(new Subtask("Обменять валюту", "Нужны доллары и местная валюта", 3));
-        mngr.addSubtask(new Subtask("Определиться с котом", "Сдать полосатика в котдом или родне", 3));
+        Epic epic1 = new Epic(100, "Эпик №1", "С тремя подзадачами");
+        manager.epicCreator(epic1);
 
-        mngr.addEpic(new Epic("Собрать студию"));
-        mngr.addSubtask(new Subtask("Электрика и звукоизоляция", "Сначала смонтировать всю электрику" +
-                " и освещение, только потом делать аккустическое пространство",6));
+        Subtask subtask1 = new Subtask("Подзадача № 1", "Описание подзадачи 1", epic1); //1
+        manager.subtaskCreator(subtask1);
+        Subtask subtask2 = new Subtask("Подзадача № 2", "Описание подзадачи 2", epic1); //2
+        manager.subtaskCreator(subtask2);
+        Subtask subtask3 = new Subtask("Подзадача № 3", "Описание подзадачи 3", epic1); //3
+        manager.subtaskCreator(subtask3);
 
-        System.out.println(mngr.getTasks());
-        System.out.println(mngr.getTaskById(2));
-        System.out.println(mngr.getEpics());
-        System.out.println(mngr.getEpicById(6));
-        System.out.println(mngr.getSubtasks());
-        System.out.println(mngr.getSubtaskById(5));
+        Epic epic2 = new Epic(200, "Эпик №2", "Без подзадач"); //7
+        manager.epicCreator(epic2);
 
-        task = mngr.getTaskById(1);
-        task.setStatus(Status.DONE);
-        mngr.updateTask(task);
-        System.out.println(mngr.getTasks());
+        //Обращение к задачам
+        System.out.println("\n----------Первое обращение к задачам (10,20,100,200,1,2,3):");
+        manager.getTaskById(10);
+        manager.getTaskById(20);
+        manager.getEpicById(100);
+        manager.getEpicById(200);
+        manager.getSubtaskById(1);
+        manager.getSubtaskById(2);
+        manager.getSubtaskById(3);
 
-        subtask = mngr.getSubtaskById(4);
-        subtask.setStatus(Status.DONE);
-        mngr.updateSubtask(subtask);
-        subtask = mngr.getSubtaskById(5);
-        subtask.setStatus(Status.DONE);
-        mngr.updateSubtask(subtask);
+        System.out.println("Список обращений к задачам:");
+        for (Task taskFor : manager.history())
+            System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
-        System.out.println(mngr.getEpicById(6));
+        System.out.println("\n----------Второе обращение к задачам (20,10,200,100,3,2,1):");
+        manager.getTaskById(20);
+        manager.getTaskById(10);
+        manager.getEpicById(200);
+        manager.getEpicById(100);
+        manager.getSubtaskById(3);
+        manager.getSubtaskById(2);
+        manager.getSubtaskById(1);
 
-        mngr.deleteEpicById(6);
+        System.out.println("Список обращений к задачам:");
+        for (Task taskFor : manager.history())
+            System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
-        subtask = mngr.getSubtaskById(4);
-        subtask.setStatus(Status.IN_PROGRESS);
-        mngr.updateSubtask(subtask);
-        subtask = mngr.getSubtaskById(5);
-        subtask.setStatus(Status.DONE);
-        mngr.updateSubtask(subtask);
+        System.out.println();
+        System.out.println("Удалим задачу #1, которая есть в истории.");
+        manager.deleteTaskById(10);
+        System.out.println("Проверим не осталась ли она в истории: ");
+        for (Task taskFor : manager.history())
+            System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
-        System.out.println(mngr.getEpics());
-        System.out.println(mngr.getSubtasks());
+        System.out.println();
+        System.out.println("Удалим эпик с тремя подзадачами: ");
+        manager.deleteEpicById(100); // При удалении Эпика, удалились и Подзадачи к нему
 
-        mngr.deleteAllTasks();
-        mngr.deleteAllEpics();
-        mngr.deleteAllSubtasks();
-        System.out.println(mngr.getTasks());
-        System.out.println(mngr.getSubtasks());
-        System.out.println(mngr.getEpics());
-
-        for (Task history : mngr.getHistory()) { // Вывод истории просмотров
-            System.out.println(history);
-        }
-        */
-
-/*        mngr.addTask(new Task("Задача 1", "Описание 1"));
-        mngr.addTask(new Task("Задача 2", "Описание 2"));
-
-        mngr.addEpic(new Epic("Эпик 1"));
-        mngr.addSubtask(new Subtask("Подзадача №1 Эпика 3", "Описание Подзадачи №1 Эпика 1", 3));
-        mngr.addSubtask(new Subtask("Подзадача №2 Эпика 3", "Описание Подзадачи №2 Эпика 1", 3));
-        mngr.addSubtask(new Subtask("Подзадача №3 Эпика 3", "Описание Подзадачи №3 Эпика 1", 3));
-
-        mngr.addEpic(new Epic("Эпик 2"));
-
-        System.out.println(mngr.getTaskById(2));
-        System.out.println(mngr.getTaskById(1));
-        System.out.println(mngr.getEpicById(3));
-        System.out.println(mngr.getTaskById(2));
-        System.out.println(mngr.getSubtaskById(4));
-        System.out.println(mngr.getEpicById(3));
-        System.out.println(mngr.getSubtaskById(5));
-        System.out.println(mngr.getSubtaskById(6));
-        System.out.println(mngr.getEpicById(7));
-        System.out.println(mngr.getEpicById(3));
-        System.out.println("----------------------------------------------------------");
-
-        for (Task history : mngr.getHistory()) { // Вывод истории просмотров
-            System.out.println(history);
-        }*/
+        System.out.println("Список обращений к задачам после удаления Эпика #1000:");
+        for (Task taskFor : manager.history())
+            System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
     }
 }

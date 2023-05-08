@@ -1,4 +1,4 @@
-package ru.yandex.practicum.manager;
+package logic;
 
 public class Managers {
 
