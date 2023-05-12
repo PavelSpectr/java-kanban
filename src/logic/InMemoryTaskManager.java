@@ -19,6 +19,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     protected HistoryManager historyManager = Managers.getDefaultHistory();
     protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
+    //Благодарю
 
     @Override
     public void taskCreator(Task task) {
@@ -152,6 +153,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
+        //Все оказалось несколько сложнее, чем предполагалось)
         if (taskHashMap.containsKey(task.getId())) {
             if (!hasCorrectTime(task)) {
                 System.out.println("Новая задача пересекается по времени с уже существующей!");
@@ -266,6 +268,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (startDate != null && endDate != null) {
             Stream<Task> tasks = sortedTaskSet.stream()
                     .filter(task -> task.getTaskType() != TaskType.EPIC && task.getStartTime() != null && task.getDuration() != null)
+                    //Справедливое замечание)
                     .filter(task -> task.getStartTime().isAfter(startDate) && task.getEndTime().isBefore(endDate));
             /*Если даты не null, фильтруем таски из sortedTaskSet, исключая все задачи типа epic
              (поскольку они также могут хранить другие задачи), и задачи, для которых startTime или duration равны null

@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     FileBackedTasksManager taskManager1;
+    FileBackedTasksManager taskManager2;
 
     @BeforeEach
     public void beforeEach() {
@@ -46,10 +47,11 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.save();
 
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
-        assertEquals(1, taskManager1.getEpics().size(), "Количество задач менеджера после восстановления не совпало!");
+        taskManager2 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
+        assertEquals(taskManager1.getEpics(), taskManager2.getEpics(), "Количество задач менеджера после восстановления не совпало!");
 
         // Пустой список истории.
-        assertEquals(0, taskManager1.history().size(), "Количество задач в истории обращения после восстановления не совпало!");
+        assertEquals(taskManager1.history(), taskManager2.history(), "Количество задач в истории обращения после восстановления не совпало!");
 
         // Со стандартным поведением.
         Epic epic2 = new Epic(200, "Эпик 2", "Эпик с подзадачами");
