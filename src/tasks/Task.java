@@ -1,10 +1,8 @@
 package tasks;
 
-import logic.TaskStatus;
-import logic.TaskType;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Task {
     protected String title;
@@ -94,6 +92,10 @@ public class Task {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -155,5 +157,6 @@ public class Task {
     то вернуть пустую строку (""). В противном случае
     вернуть результат вызова метода getDuration() в виде строки.
      */
+
 
 }

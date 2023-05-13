@@ -1,15 +1,10 @@
 package logic;
 
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import tasks.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -19,30 +14,32 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     protected HistoryManager historyManager = Managers.getDefaultHistory();
     protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
-    //Благодарю
 
     @Override
-    public void taskCreator(Task task) {
-        checkId(task); // Проверили, был ли задан id, при создании задачи, если нет то сгенерировали, следующий свободный
-        taskHashMap.put(task.getId(), task); //положили задачу в мапу, по ее id
-        checkTask(task); //проверили на пересечение, если пересечений нет, положили в дерево sortedTaskSet
+    public Task taskCreator(Task task) {
+        setId(task);
+        taskHashMap.put(task.getId(), task);
+        checkTask(task);
+        return task;
     }
 
     @Override
-    public void subtaskCreator(Subtask subtask) {
-        checkId(subtask);
+    public Subtask subtaskCreator(Subtask subtask) {
+        setId(subtask);
         subtaskHashMap.put(subtask.getId(), subtask);
         subtask.getEpic().getSubtaskIdList().add(subtask);
         refreshDates(subtask.getEpic());
         calcEpicStatus(subtask.getEpic());
         checkTask(subtask);
+        return subtask;
     }
 
 
     @Override
-    public void epicCreator(Epic epic) {
-        checkId(epic);
+    public Epic epicCreator(Epic epic) {
+        setId(epic);
         epicHashMap.put(epic.getId(), epic);
+        return epic;
     }
 
     @Override
@@ -153,7 +150,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) {
-        //Все оказалось несколько сложнее, чем предполагалось)
         if (taskHashMap.containsKey(task.getId())) {
             if (!hasCorrectTime(task)) {
                 System.out.println("Новая задача пересекается по времени с уже существующей!");
@@ -187,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> history() { //historyTest
+    public List<Task> getTaskHistory() { //historyTest
         return historyManager.getHistory();
     }
 
@@ -268,7 +264,6 @@ public class InMemoryTaskManager implements TaskManager {
         if (startDate != null && endDate != null) {
             Stream<Task> tasks = sortedTaskSet.stream()
                     .filter(task -> task.getTaskType() != TaskType.EPIC && task.getStartTime() != null && task.getDuration() != null)
-                    //Справедливое замечание)
                     .filter(task -> task.getStartTime().isAfter(startDate) && task.getEndTime().isBefore(endDate));
             /*Если даты не null, фильтруем таски из sortedTaskSet, исключая все задачи типа epic
              (поскольку они также могут хранить другие задачи), и задачи, для которых startTime или duration равны null
@@ -297,7 +292,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void checkId(Task task) {
+    private void setId(Task task) {
         if (task.getId() == null) {
             task.setId(++idGenerator);
         }

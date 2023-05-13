@@ -1,15 +1,16 @@
 import logic.Managers;
 import logic.TaskManager;
-import logic.TaskStatus;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+
+import tasks.TaskStatus;
+import tasks.*;
 
 public class Main {
     public static void main(String[] args) {
 
-        TaskManager manager = Managers.getDefault();
-
+        TaskManager manager = Managers.getInMemoryTaskManager();
+     /*
+     5 спринт. Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач:
+     */
         Task task1 = new Task(10, "Задача №1", "Описание задачи 1");
         manager.taskCreator(task1);
         Task task2 = new Task(20, "Задача №2", "Описание задачи 2");
@@ -28,7 +29,10 @@ public class Main {
 
         Epic epic2 = new Epic(200, "Эпик №2", "Без подзадач"); //7
         manager.epicCreator(epic2);
-
+    /*
+     5 спринт.  Запросите созданные задачи несколько раз в разном порядке,
+       после каждого запроса выведите историю и убедитесь, что в ней нет повторов:
+     */
         //Обращение к задачам
         System.out.println("\n----------Первое обращение к задачам (10,20,100,200,1,2,3):");
         manager.getTaskById(10);
@@ -40,7 +44,7 @@ public class Main {
         manager.getSubtaskById(3);
 
         System.out.println("Список обращений к задачам:");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
         System.out.println("\n----------Второе обращение к задачам (20,10,200,100,3,2,1):");
@@ -53,22 +57,30 @@ public class Main {
         manager.getSubtaskById(1);
 
         System.out.println("Список обращений к задачам:");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
+     /*
+     5 спринт. Удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться:
+     */
         System.out.println();
         System.out.println("Удалим задачу #1, которая есть в истории.");
         manager.deleteTaskById(10);
         System.out.println("Проверим не осталась ли она в истории: ");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
+     /*
+     5 спринт. Удалите эпик с тремя подзадачами
+     */
         System.out.println();
         System.out.println("Удалим эпик с тремя подзадачами: ");
         manager.deleteEpicById(100); // При удалении Эпика, удалились и Подзадачи к нему
-
+      /*
+     5 спринт. Убедитесь, что из истории удалился как сам эпик, так и все его подзадачи
+     */
         System.out.println("Список обращений к задачам после удаления Эпика #1000:");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
     }
 }

@@ -1,17 +1,15 @@
 package logic;
 
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import tasks.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
 
-    void taskCreator(Task task);
-    void subtaskCreator(Subtask subtask);
-    void epicCreator(Epic epic);
+    Task taskCreator(Task task);
+    Subtask subtaskCreator(Subtask subtask);
+    Epic epicCreator(Epic epic);
 
     HashMap<Integer, Task> getTasks();
     HashMap<Integer, Subtask> getSubtasks();
@@ -33,7 +31,8 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
     void updateEpic(Epic epic);
 
-    List<Task> history();
+    List<Task> getTaskHistory();
     List<Task> getPrioritizedTasks();
+    //HashMap<Integer, Subtask> viewSubTaskOfEpic(Integer epicID);
 
 }

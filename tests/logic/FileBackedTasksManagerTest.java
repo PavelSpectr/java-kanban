@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.TaskStatus;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -13,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     FileBackedTasksManager taskManager1;
-    FileBackedTasksManager taskManager2;
 
     @BeforeEach
     public void beforeEach() {
@@ -35,7 +35,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertEquals(0, taskManager1.getTasks().size(), "Количество задач менеджера после восстановления не совпало!");
 
         // Пустой список истории.
-        assertEquals(0, taskManager1.history().size(), "Количество задач в истории обращения после восстановления не совпало!");
+        assertEquals(0, taskManager1.getTaskHistory().size(), "Количество задач в истории обращения после восстановления не совпало!");
     }
 
     //Тестирование метода загрузки списка задач из файла
@@ -47,11 +47,10 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager.save();
 
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
-        taskManager2 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
-        assertEquals(taskManager1.getEpics(), taskManager2.getEpics(), "Количество задач менеджера после восстановления не совпало!");
+        assertEquals(1, taskManager1.getEpics().size(), "Количество задач менеджера после восстановления не совпало!");
 
         // Пустой список истории.
-        assertEquals(taskManager1.history(), taskManager2.history(), "Количество задач в истории обращения после восстановления не совпало!");
+        assertEquals(0, taskManager1.getTaskHistory().size(), "Количество задач в истории обращения после восстановления не совпало!");
 
         // Со стандартным поведением.
         Epic epic2 = new Epic(200, "Эпик 2", "Эпик с подзадачами");
@@ -74,12 +73,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         assertEquals(1, taskManager1.getTasks().size(), "Количество задач менеджера после восстановления не совпало!");
         assertEquals(2, taskManager1.getSubtasks().size(), "Количество задач менеджера после восстановления не совпало!");
         assertEquals(2, taskManager1.getEpics().size(), "Количество задач менеджера после восстановления не совпало!");
-        assertEquals(1, taskManager1.history().size(), "Количество задач в истории обращения после восстановления не совпало!");
+        assertEquals(1, taskManager1.getTaskHistory().size(), "Количество задач в истории обращения после восстановления не совпало!");
     }
 
     @Test
     public void loadFromFileAnotherTest() {
-        assertEquals(0, taskManager.history().size());
+        assertEquals(0, taskManager.getTaskHistory().size());
         Task task = new Task("Задача", "Описание", TaskStatus.NEW);
         taskManager.taskCreator(task);
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
@@ -95,7 +94,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
 
         // c. Пустой список истории.
-        assertEquals(0, taskManager1.history().size());
+        assertEquals(0, taskManager1.getTaskHistory().size());
         assertEquals(taskManager1.getEpicById(100).getTitle(), epic.getTitle());
         assertEquals(taskManager1.getEpicById(100).getDescription(), epic.getDescription());
         assertEquals(taskManager1.getEpicById(100).getSubtaskIdList().size(), 0);
